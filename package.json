@@ -1,0 +1,26 @@
+{
+  "name": "learn-sequelize",
+  "version": "0.0.1",
+  "description": "시퀄라이즈를 배우자",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app"
+  },
+  "author": "SoyeonCho",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.21.4",
+    "express": "^4.17.1",
+    "morgan": "^1.10.0",
+    "mysql2": "^2.3.0",
+    "ngrok": "^4.2.2",
+    "nunjucks": "^3.2.3",
+    "sequelize": "^6.6.5",
+    "sequelize-cli": "^6.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.13",
+    "swagger-jsdoc": "^6.1.0",
+    "swagger-ui-express": "^4.1.6"
+  }
+}
