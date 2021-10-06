@@ -15,10 +15,10 @@ async function getUser() {
         users.map(function(user){
             const row = document.createElement('tr');
             row.addEventListener('click',()=>{
-                getComment(user.id);
+                getComment(user.loginId);
             });
             let td = document.createElement('td');
-            td.textContent = user.id;
+            td.textContent = user.loginId;
             row.appendChild(td);
             td = document.createElement('td');
             td.textContent = user.name;
@@ -100,9 +100,18 @@ async function getComment(id) {
 
 document.getElementById('user-form').addEventListener('submit',async(e)=>{
     e.preventDefault();
+    const loginId = e.target.loginId.value;
+    const pw = e.target.pw.value;
     const name = e.target.username.value;
     const age = e.target.age.value;
     const married = e.target.married.checked;
+
+    if(!loginId){
+        return alert('아이디를 입력하세요');
+    }
+    if(!pw){
+        return alert('비밀번호를 입력하세요');
+    }
     if(!name){
         return alert('이름을 입력하세요');
     }
@@ -110,12 +119,14 @@ document.getElementById('user-form').addEventListener('submit',async(e)=>{
         return alert('나이를 입력하세요');
     }
     try{
-        await axios.post('/users',{name,age,married});
+        await axios.post('/users',{loginId,pw,name,age,married});
         getUser();//사용자 로딩
     }catch(err){
         console.error(err);
     }
     //초기화
+    e.target.loginId.value = '';
+    e.target.pw.value = '';
     e.target.username.value = '';
     e.target.age.value = '';
     e.target.married.checked = false;

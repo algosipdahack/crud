@@ -3,6 +3,15 @@ const Sequelize = require('sequelize');
 module.exports = class User extends Sequelize.Model{//알아서 id를 기본키로 연결해주기에 적어줄 필요가 없다.
     static init(sequelize){
         return super.init({
+            loginId:{
+                type: Sequelize.STRING(20),//varchar(20)
+                allowNull: false,
+                unique: true,
+            },
+            pw:{
+                type: Sequelize.STRING(20),//varchar(20)
+                allowNull: false,
+            },
             name:{
                 type: Sequelize.STRING(20),//varchar(20)
                 allowNull: false,
@@ -21,7 +30,7 @@ module.exports = class User extends Sequelize.Model{//알아서 id를 기본키�
                 allowNull: true,
             },
             created_at:{
-                type: Sequelize. E,//datetime
+                type: Sequelize. DATE,//datetime
                 allowNull: false,
                 defaultValue: Sequelize.NOW,//현재시간을 기본값으로 설정
             },

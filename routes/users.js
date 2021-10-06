@@ -17,6 +17,8 @@ router.route('/')
   .post(async(req,res,next)=>{
     try{
       const user = await User.create({
+        loginId: req.body.loginId,
+        pw: req.body.pw,
         name: req.body.name,
         age: req.body.age,
         married: req.body.married,
@@ -34,7 +36,7 @@ router.get('/:id/comments',async(req,res,next)=>{
     const comments = await Comment.findAll({
       include:{
         model: User,
-        where:{id:req.params.id},
+        where:{id:req.params.LoginId},
       },
     });
     console.log(comments);

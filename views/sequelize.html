@@ -12,11 +12,13 @@
     <div>
       <form id="user-form">
         <fieldset>
-          <legend>사용자 등록</legend>
+          <legend>회원가입</legend>
+          <div><input id="loginId" type="text" placeholder="아이디"></div>
+          <div><input id="pw" type="password" placeholder="비밀번호"></div>
           <div><input id="username" type="text" placeholder="이름"></div>
           <div><input id="age" type="number" placeholder="나이"></div>
-          <div><input id="married" type="checkbox"><label for="married">결혼 여부</label></div>
-          <button type="submit">등록</button>
+          <div><input id="married" type="checkbox"><label for="married">결혼여부</label></div>
+          <button type="submit">회원가입</button>
         </fieldset>
       </form>
     </div>
@@ -33,7 +35,7 @@
       <tbody>
         {% for user in users %}
         <tr>
-          <td>{{user.id}}</td>
+          <td>{{user.loginId}}</td>
           <td>{{user.name}}</td>
           <td>{{user.age}}</td>
           <td>{{ '기혼' if user.married else '미혼'}}</td>
