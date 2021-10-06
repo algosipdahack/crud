@@ -119,7 +119,7 @@ document.getElementById('user-form').addEventListener('submit',async(e)=>{
         return alert('나이를 입력하세요');
     }
     try{
-        await axios.post('/users',{loginId,pw,name,age,married});
+        await axios.post('/register',{loginId,pw,name,age,married});
         getUser();//사용자 로딩
     }catch(err){
         console.error(err);

@@ -5,9 +5,9 @@ const nunjucks = require('nunjucks');
 
 //라우터를 연결
 const {sequelize} = require('./models');
-const indexRouter = require('./routes');
-const usersRouter = require('./routes/users');
-const commentsRouter = require('./routes/comments');
+const indexRouter = require('./api/auth');
+const usersRouter = require('./api/user/users');
+const commentsRouter = require('./api/user/comments');
 
 const app = express();
 
@@ -34,6 +34,7 @@ app.use(express.urlencoded({extended:false}));
 app.use('/',indexRouter);
 app.use('/users',usersRouter);
 app.use('/comments',commentsRouter);
+app.use('/api',require('./api/auth'));
 
 app.use((req,res,next)=>{
   const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
