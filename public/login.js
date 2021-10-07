@@ -102,24 +102,14 @@ document.getElementById('user-form').addEventListener('submit',async(e)=>{
     e.preventDefault();
     const loginId = e.target.loginId.value;
     const pw = e.target.pw.value;
-    const name = e.target.username.value;
-    const age = e.target.age.value;
-    const married = e.target.married.checked;
-
     if(!loginId){
         return alert('아이디를 입력하세요');
     }
     if(!pw){
         return alert('비밀번호를 입력하세요');
     }
-    if(!name){
-        return alert('이름을 입력하세요');
-    }
-    if(!age){
-        return alert('나이를 입력하세요');
-    }
     try{
-        await axios.post('/register',{loginId,pw,name,age,married});
+        await axios.post(`/login/${e.target.id.value}`,{loginId, pw});
         getUser();//사용자 로딩
     }catch(err){
         console.error(err);
@@ -127,9 +117,6 @@ document.getElementById('user-form').addEventListener('submit',async(e)=>{
     //초기화
     e.target.loginId.value = '';
     e.target.pw.value = '';
-    e.target.username.value = '';
-    e.target.age.value = '';
-    e.target.married.checked = false;
 });
 
 document.getElementById('comment-form').addEventListener('submit',async(e)=>{

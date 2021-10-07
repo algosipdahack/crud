@@ -1,6 +1,7 @@
 var express = require('express');
 const User = require('../../models/user');
-const config = require('../../config/config.json');
+const env = process.env.NODE_ENV || 'development';
+const config = require('../../config/config.json')[env];
 const jwt  = require('jsonwebtoken');
 const bcrypt = require('bcrypt-nodejs');
 const router = express.Router();
@@ -26,12 +27,12 @@ router.get('/login',async(req,res,next)=>{//get방식 라우터
   }
 });
 
-router.get('/login/:id',async(req,res,next)=>{
+router.post('/login/:id',async(req,res,next)=>{
   try{
-    const loginId = req.params.loginId;
-    const pw = req.params.pw;
-    User.findOne({
-        attributes: ['pw'],
+    const loginId = req.body.loginId;
+    const pw = req.body.pw;;
+    const user = User.findOne({
+        attributes: ['id','pw'],
         where: {
             loginId : loginId,
         }
@@ -62,6 +63,7 @@ router.get('/login/:id',async(req,res,next)=>{
     res.status(500).json({status: false, result:'login error'});
   }
 });
+
 router.post('/register',async(req,res,next)=>{
   try{
     const loginId = req.body.loginId;
