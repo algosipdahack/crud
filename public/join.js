@@ -132,15 +132,6 @@ document.getElementById('user-form').addEventListener('submit',async(e)=>{
     e.target.married.checked = false;
 });
 
-document.getElementById('user-form').addEventListener('login',async(e)=>{
-    e.preventDefault();
-    try{
-        await axios.get('/login');
-        getUser();//사용자 로딩
-    }catch(err){
-        console.error(err);
-    }
-});
 
 document.getElementById('comment-form').addEventListener('submit',async(e)=>{
     e.preventDefault();

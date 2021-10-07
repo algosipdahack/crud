@@ -8,7 +8,6 @@ const {sequelize} = require('./models');
 const indexRouter = require('./api/auth');
 const usersRouter = require('./api/user/users');
 const commentsRouter = require('./api/user/comments');
-
 const app = express();
 
 // view engine setup

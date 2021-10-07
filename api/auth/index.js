@@ -5,6 +5,7 @@ const jwt  = require('jsonwebtoken');
 const bcrypt = require('bcrypt-nodejs');
 const router = express.Router();
 const SECRET = config.secret_key;
+
 router.get('/',async(req,res,next)=>{//get방식 라우터
   try{
     const users = await User.findAll();
@@ -14,10 +15,22 @@ router.get('/',async(req,res,next)=>{//get방식 라우터
     next(err);
   }
 });
-router.post('/login',async(req,res,next)=>{
+
+router.get('/login',async(req,res,next)=>{//get방식 라우터
   try{
-    const{loginId,pw} = req.body;
-    User.find({
+    const users = await User.findAll();
+    res.render('login',{users});
+  }catch(err){
+    console.error(err);
+    next(err);
+  }
+});
+
+router.get('/login/:id',async(req,res,next)=>{
+  try{
+    const loginId = req.params.loginId;
+    const pw = req.params.pw;
+    User.findOne({
         attributes: ['pw'],
         where: {
             loginId : loginId,
@@ -84,7 +97,7 @@ router.post('/register',async(req,res,next)=>{
                             })
                             console.log(user);
                             res.status(201).json({status:true,result:"register success"});
-                            res.render('login',{users});
+                            //res.render('login',{users});
                         }
                     });
                 }

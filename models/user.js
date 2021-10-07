@@ -9,7 +9,7 @@ module.exports = class User extends Sequelize.Model{//알아서 id를 기본키�
                 unique: true,
             },
             pw:{
-                type: Sequelize.STRING(20),//varchar(20)
+                type: Sequelize.STRING(100),//varchar(50)
                 allowNull: false,
             },
             name:{
