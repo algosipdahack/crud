@@ -6,7 +6,7 @@ const router = express.Router();
 router.post('/',async(req,res,next)=>{
     try{
         const comment = await Comment.create({
-            commenter: req.body.id,
+            commenter: req.body.id,//loginId
             comment: req.body.comment,
         });
         console.log(comment);

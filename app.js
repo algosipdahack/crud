@@ -2,6 +2,9 @@ const express = require('express');
 const path = require('path');
 const morgan = require('morgan');
 const nunjucks = require('nunjucks');
+var cookieParser = require('cookie-parser');
+const HOST = '0.0.0.0';
+const PORT = 8081;
 
 //라우터를 연결
 const {sequelize} = require('./models');
@@ -11,7 +14,6 @@ const commentsRouter = require('./api/user/comments');
 const app = express();
 
 // view engine setup
-app.set('port',process.env.PORT || 3002);
 app.set('view engine', 'html');
 nunjucks.configure('views',{
   express: app,
@@ -29,6 +31,7 @@ app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
+app.use(cookieParser())
 
 app.use('/',indexRouter);
 app.use('/users',usersRouter);
@@ -47,9 +50,6 @@ app.use((err,req,res,next)=>{
   res.status(err.status||500);
   res.render('error');
 });
-
-app.listen(app.get('port'),()=>{
-  console.log(app.get('port'),'번 포트에서 대기 중');
-});
-
+app.listen(PORT,HOST);
+console.log(`Running on http://${HOST}:${PORT}`);
 module.exports = app;

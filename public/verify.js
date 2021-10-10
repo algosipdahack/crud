@@ -102,28 +102,6 @@ async function getComment(id) {
     }
 }
 
-document.getElementById('user-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const loginId = e.target.loginId.value;
-    const pw = e.target.pw.value;
-    if (!loginId) {
-        return alert('아이디를 입력하세요');
-    }
-    if (!pw) {
-        return alert('비밀번호를 입력하세요');
-    }
-    try {
-        await axios.post(`/token`, { loginId, pw });
-        await axios.get(`/test`,{ loginId, pw });
-        location.href =`/test?loginId=${loginId}`;
-        getUser();//사용자 로딩
-    } catch (err) {
-        console.error(err);
-    }
-    //초기화
-    e.target.loginId.value = '';
-    e.target.pw.value = '';
-});
 
 document.getElementById('comment-form').addEventListener('submit', async (e) => {
     e.preventDefault();

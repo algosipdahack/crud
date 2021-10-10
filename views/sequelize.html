@@ -27,6 +27,7 @@
     <table id="user-list">
       <thead>
       <tr>
+        <th>번호</th>
         <th>아이디</th>
         <th>이름</th>
         <th>나이</th>
@@ -36,6 +37,7 @@
       <tbody>
         {% for user in users %}
         <tr>
+          <td>{{user.id}}</td>
           <td>{{user.loginId}}</td>
           <td>{{user.name}}</td>
           <td>{{user.age}}</td>

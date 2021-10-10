@@ -36,7 +36,7 @@ router.get('/:id/comments',async(req,res,next)=>{
     const comments = await Comment.findAll({
       include:{
         model: User,
-        where:{id:req.params.LoginId},
+        where:{id:req.params.id},
       },
     });
     console.log(comments);

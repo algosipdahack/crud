@@ -18,6 +18,9 @@ async function getUser() {
                 getComment(user.loginId);
             });
             let td = document.createElement('td');
+            td.textContent = user.id;
+            row.appendChild(td);
+            td = document.createElement('td');
             td.textContent = user.loginId;
             row.appendChild(td);
             td = document.createElement('td');
@@ -120,6 +123,7 @@ document.getElementById('user-form').addEventListener('submit',async(e)=>{
     }
     try{
         await axios.post('/register',{loginId,pw,name,age,married});
+        location.href =`/login`;
         getUser();//사용자 로딩
     }catch(err){
         console.error(err);
