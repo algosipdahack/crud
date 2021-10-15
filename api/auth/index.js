@@ -17,6 +17,19 @@ router.get('/', async (req, res, next) => {//get방식 라우터
   res.render('sequelize', { users });
 });
 
+router.get('/:id', async (req, res, next) => {
+  const id = req.params.id;
+  const user = await User.findOne({
+    where: {
+      id: id,
+    },
+  }).catch((e) => {
+    console.log(e);
+    res.status(500).json({ status: false, result: 'No user' });
+  });
+  res.json(user);
+});
+
 router.get('/login', async (req, res, next) => {//get방식 라우터
   const users = await User.findAll().catch((err) => {
     console.error(err);
@@ -25,11 +38,6 @@ router.get('/login', async (req, res, next) => {//get방식 라우터
   res.render('login', { users });
 });
 
-router.get('/test', verifyToken, (req, res) => {
-  const loginId = req.query.loginId;
-  const user = User.findAll();
-  res.render('verify', { user: user, loginId: loginId });
-});
 
 router.post('/token', async (req, res, next) => {
   const loginId = req.body.loginId;
@@ -43,7 +51,6 @@ router.post('/token', async (req, res, next) => {
     console.log(e);
     res.status(500).json({ status: false, result: 'login error' });
   });
-
   if (user != null) { //유저가 존재한다면
     bcrypt.compare(pw, user.pw, (err, result) => {
       if (result === true) {//로그인 성공

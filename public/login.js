@@ -1,3 +1,5 @@
+const { default: axios } = require("axios");
+
 document.querySelectorAll('#user-list tr').forEach((el) => {
     el.addEventListener('click', function () {
         const id = el.querySelector('td').textContent;
@@ -96,8 +98,12 @@ document.getElementById('user-form').addEventListener('submit', async (e) => {
     if (!pw) {
         return alert('비밀번호를 입력하세요');
     }
-    await axios.post(`/token`, { loginId, pw }).catch((err) => console.error(err));
-    await axios.get(`/test`, { loginId, pw }).catch((err) => console.error(err));
+    var login = await axios.post(`/token`, { loginId, pw }).catch((err, res, req) => console.error(err));
+
+    if (login != undefined)
+        await axios.get(`/test`, { loginId, pw }).catch((err) => console.error(err));
+    else return alert('아이디 또는 비밀번호를 다시 확인해주세요.');
+
     location.href = `/test?loginId=${loginId}`;
     getUser();//사용자 로딩
     //초기화
@@ -116,9 +122,17 @@ document.getElementById('comment-form').addEventListener('submit', async (e) => 
     if (!comment) {
         return alert('댓글을 입력하세요');
     }
+    const user = await axios.get(`/${id}`);
+    const loginId = user.data.loginId;
+    const pw = user.data.pw;
+
+    if (user != undefined) //아이디 존재 x
+        await axios.get('/test', { loginId, pw }).catch((err) => console.error(err));
+    else
+        return alert('존재하지 않는 아이디입니다');
+
     await axios.post('/comments', { id, comment }).catch((err) => console.error(err));
     getComment(id);//댓글
-    console.log(1);
     //초기화
     e.target.userid.value = '';
     e.target.comment.value = '';
