@@ -1,5 +1,3 @@
-const { default: axios } = require("axios");
-
 document.querySelectorAll('#user-list tr').forEach((el) => {
     el.addEventListener('click', function () {
         const id = el.querySelector('td').textContent;
@@ -54,6 +52,9 @@ async function getComment(id) {
         td.textContent = comment.id;//아이디
         row.appendChild(td);
         td = document.createElement('td');
+        td.textContent = comment.User.loginId;//작성자
+        row.appendChild(td);
+        td = document.createElement('td');
         td.textContent = comment.User.name;//작성자
         row.appendChild(td);
         td = document.createElement('td');
@@ -63,19 +64,13 @@ async function getComment(id) {
         const edit = document.createElement('button');
         edit.textContent = '수정';
         edit.addEventListener('click', async () => {
-            const newComment = prompt('바꿀 내용을 입력하세요');
-            if (!newComment) {
-                return alert('내용을 반드시 입력하셔야 합니다.');
-            }
-            await axios.patch(`/comments/${comment.id}`, { comment: newComment }).catch((err) => console.error(err));
-            getComment(id);
+            alert('해당 댓글을 수정하시려면 로그인을 하셔야 합니다');
         });
 
         const remove = document.createElement('button');
         remove.textContent = '삭제';
         remove.addEventListener('click', async () => {
-            await axios.delete(`/comments/${comment.id}`).catch((err) => console.error(err));
-            getComment(id);
+            alert('해당 댓글을 삭제하시려면 로그인을 하셔야 합니다');
         });
 
         td = document.createElement('td');
@@ -99,9 +94,9 @@ document.getElementById('user-form').addEventListener('submit', async (e) => {
         return alert('비밀번호를 입력하세요');
     }
     var login = await axios.post(`/token`, { loginId, pw }).catch((err, res, req) => console.error(err));
-
+    console.log(login);
     if (login != undefined)
-        await axios.get(`/test`, { loginId, pw }).catch((err) => console.error(err));
+        await axios.get('/test', { loginId, pw }).catch((err) => console.error(err));
     else return alert('아이디 또는 비밀번호를 다시 확인해주세요.');
 
     location.href = `/test?loginId=${loginId}`;
@@ -111,29 +106,3 @@ document.getElementById('user-form').addEventListener('submit', async (e) => {
     e.target.pw.value = '';
 });
 
-document.getElementById('comment-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const id = e.target.userid.value;
-    const comment = e.target.comment.value;
-
-    if (!id) {//id가 존재하는지는 검증하지 않음
-        return alert('아이디를 입력하세요');
-    }
-    if (!comment) {
-        return alert('댓글을 입력하세요');
-    }
-    const user = await axios.get(`/${id}`);
-    const loginId = user.data.loginId;
-    const pw = user.data.pw;
-
-    if (user != undefined) //아이디 존재 x
-        await axios.get('/test', { loginId, pw }).catch((err) => console.error(err));
-    else
-        return alert('존재하지 않는 아이디입니다');
-
-    await axios.post('/comments', { id, comment }).catch((err) => console.error(err));
-    getComment(id);//댓글
-    //초기화
-    e.target.userid.value = '';
-    e.target.comment.value = '';
-});

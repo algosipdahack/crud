@@ -11,7 +11,7 @@ const { sequelize } = require('./models');
 const indexRouter = require('./api/auth');
 const usersRouter = require('./api/user/users');
 const commentsRouter = require('./api/user/comments');
-const testRouter = require('./api/auth/test');
+//const testRouter = require('./api/auth/test');
 const app = express();
 
 // view engine setup
@@ -38,7 +38,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/comments', commentsRouter);
 app.use('/api', require('./api/auth'));
-app.use('/test', testRouter);
+//app.use('/test', testRouter);
 app.use((req, res, next) => {
   const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
   error.status = 404;

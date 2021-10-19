@@ -17,18 +17,19 @@ router.get('/', async (req, res, next) => {//get방식 라우터
   res.render('sequelize', { users });
 });
 
-router.get('/:id', async (req, res, next) => {
-  const id = req.params.id;
-  const user = await User.findOne({
-    where: {
-      id: id,
-    },
-  }).catch((e) => {
-    console.log(e);
-    res.status(500).json({ status: false, result: 'No user' });
+router.route('/login/:id')
+  .get(async (req, res, next) => {
+    const id = req.params.id;
+    const user = await User.findOne({
+      where: {
+        loginId: id,
+      },
+    }).catch((e) => {
+      console.log(e);
+      res.status(500).json({ status: false, result: 'No user' });
+    });
+    res.json(user);
   });
-  res.json(user);
-});
 
 router.get('/login', async (req, res, next) => {//get방식 라우터
   const users = await User.findAll().catch((err) => {
@@ -38,6 +39,28 @@ router.get('/login', async (req, res, next) => {//get방식 라우터
   res.render('login', { users });
 });
 
+router.get('/test', verifyToken, async (req, res) => {
+  const loginId = req.query.loginId;
+  console.log('test', loginId);
+  console.log(req);
+  const users = await User.findAll().catch((err) => {
+    console.error(err);
+    next(err);
+  });
+  if (req.decoded == null) {
+    res.render('login', { users: users });
+  }
+  res.render('verify', { users: users, loginId: loginId });
+});
+
+router.get('/refresh', verifyToken, async (req, res) => {
+  console.log(req.query.loginId);
+  console.log(req.decoded.loginId);
+  if (req.decoded == null) {
+    res.render('login', { users: users });
+  }
+  else res.json(req.decoded);
+})
 
 router.post('/token', async (req, res, next) => {
   const loginId = req.body.loginId;

@@ -1,40 +1,9 @@
 document.querySelectorAll('#user-list tr').forEach((el) => {
     el.addEventListener('click', function () {
         const id = el.querySelector('td').textContent;
-        console.log(id);
         getComment(id);
     });
 });
-//사용자 로딩
-async function getUser() {
-    const res = await axios.get('/users').catch((err) => console.error(err));
-    const users = res.data;
-    console.log(users);
-    const tbody = document.querySelector('#user-list tbody');
-    tbody.innerHTML = '';
-    users.map(function (user) {
-        const row = document.createElement('tr');
-        row.addEventListener('click', () => {
-            getComment(user.loginId);
-        });
-        let td = document.createElement('td');
-        td.textContent = user.id;
-        row.appendChild(td);
-        td = document.createElement('td');
-        td.textContent = user.loginId;
-        row.appendChild(td);
-        td = document.createElement('td');
-        td.textContent = user.name;
-        row.appendChild(td);
-        td = document.createElement('td');
-        td.textContent = user.age;
-        row.appendChild(td);
-        td = document.createElement('td');
-        td.textContent = user.married ? '기혼' : '미혼';//표현하기 위함
-        row.appendChild(td);
-        tbody.appendChild(row);//줄 자체를 추가
-    });
-}
 //댓글 로딩
 /*
     axios 정리
@@ -52,15 +21,24 @@ async function getComment(id) {
         td.textContent = comment.id;//아이디
         row.appendChild(td);
         td = document.createElement('td');
+        td.textContent = comment.User.loginId;//작성자
+        row.appendChild(td);
+        td = document.createElement('td');
         td.textContent = comment.User.name;//작성자
         row.appendChild(td);
         td = document.createElement('td');
         td.textContent = comment.comment;//댓글
         row.appendChild(td);
-
+        var loginId = comment.User.loginId;
         const edit = document.createElement('button');
         edit.textContent = '수정';
         edit.addEventListener('click', async () => {
+            console.log('click button', loginId);
+
+            const refresh = await axios.get('/refresh', { params: { loginId: loginId } });
+            if (refresh.data.loginId != loginId) {
+                return alert('수정할 권한이 없습니다.');
+            }
             const newComment = prompt('바꿀 내용을 입력하세요');
             if (!newComment) {
                 return alert('내용을 반드시 입력하셔야 합니다.');
@@ -72,6 +50,10 @@ async function getComment(id) {
         const remove = document.createElement('button');
         remove.textContent = '삭제';
         remove.addEventListener('click', async () => {
+            const refresh = await axios.get('/refresh', { params: { loginId: loginId } });
+            if (refresh.data.loginId != loginId) {
+                return alert('삭제할 권한이 없습니다.');
+            }
             await axios.delete(`/comments/${comment.id}`).catch((err) => console.error(err));;
             getComment(id);
         });
@@ -85,19 +67,26 @@ async function getComment(id) {
         tbody.appendChild(row);//줄 전체 추가
     });
 }
-
-
+function getURLParams(url) {
+    var result = {};
+    url.replace(/[?&]{1}([^=&#]+)=([^&#]*)/g, function (s, k, v) { result[k] = decodeURIComponent(v); });
+    return result;
+}
+document.getElementById('userid').value = getURLParams(location.search)[Object.keys(getURLParams(location.search))[0]];
 document.getElementById('comment-form').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const id = e.target.userid.value;
+    const loginId = e.target.userid.value;//로그인아이디
     const comment = e.target.comment.value;
-
-    if (!id) {//id가 존재하는지는 검증하지 않음
-        return alert('아이디를 입력하세요');
-    }
     if (!comment) {
         return alert('댓글을 입력하세요');
     }
+    const user = await axios.get(`/login/${loginId}`);
+    if (user.data != null) { //아이디 존재
+        const pw = user.data.pw;
+        await axios.get('/test', { params: { loginId: loginId, pw: pw } }).catch((err) => console.error(err));
+    } else
+        return alert('존재하지 않는 아이디입니다');
+    const id = user.data.id;
     await axios.post('/comments', { id, comment }).catch((err) => console.error(err));
     getComment(id);//댓글
     //초기화
