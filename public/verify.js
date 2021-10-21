@@ -67,12 +67,38 @@ async function getComment(id) {
         tbody.appendChild(row);//줄 전체 추가
     });
 }
+
 function getURLParams(url) {
     var result = {};
     url.replace(/[?&]{1}([^=&#]+)=([^&#]*)/g, function (s, k, v) { result[k] = decodeURIComponent(v); });
     return result;
 }
+
+document.getElementById('user-form').addEventListener('submit', async (e) => {//회원탈퇴
+    e.preventDefault();
+    const loginId = e.target.loginId.value;
+    const pw = e.target.pw.value;
+    if (!loginId) {
+        return alert('아이디를 입력하세요');
+    }
+    if (!pw) {
+        return alert('비밀번호를 입력하세요');
+    }
+    var login = await axios.post(`/token`, { loginId, pw }).catch((err, res, req) => console.error(err));
+    console.log(login);
+    if (login != undefined)
+        await axios.get('/test', { loginId, pw }).catch((err) => console.error(err));
+    else return alert('아이디 또는 비밀번호를 다시 확인해주세요.');
+
+    location.href = `/test?loginId=${loginId}`;
+    getUser();//사용자 로딩
+    //초기화
+    e.target.loginId.value = '';
+    e.target.pw.value = '';
+});
+
 document.getElementById('userid').value = getURLParams(location.search)[Object.keys(getURLParams(location.search))[0]];
+
 document.getElementById('comment-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const loginId = e.target.userid.value;//로그인아이디

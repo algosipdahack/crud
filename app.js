@@ -2,9 +2,10 @@ const express = require('express');
 const path = require('path');
 const morgan = require('morgan');
 const nunjucks = require('nunjucks');
+require("dotenv").config();
 var cookieParser = require('cookie-parser');
-const HOST = '0.0.0.0';
-const PORT = 8081;
+const HOST = '127.0.0.1';
+const PORT = process.env.NODE_DOCKER_PORT || 8080;
 
 //라우터를 연결
 const { sequelize } = require('./models');
@@ -51,6 +52,7 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500);
   res.render('error');
 });
-app.listen(PORT, HOST);
-console.log(`Running on http://${HOST}:${PORT}`);
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}.`);
+});
 module.exports = app;
