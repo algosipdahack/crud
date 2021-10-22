@@ -29,9 +29,8 @@ async function getComment(id) {
         edit.textContent = '수정';
         edit.addEventListener('click', async () => {
             console.log('click button', loginId);
-
-            const refresh = await axios.get('/refresh', { params: { loginId: loginId } }).catch((err) => console.error(err));
-            if (refresh.data.loginId != loginId) {
+            const currentId = getURLParams(location.search)[Object.keys(getURLParams(location.search))[0]];
+            if (currentId != loginId) {
                 return alert('수정할 권한이 없습니다.');
             }
             const newComment = prompt('바꿀 내용을 입력하세요');
@@ -45,8 +44,8 @@ async function getComment(id) {
         const remove = document.createElement('button');
         remove.textContent = '삭제';
         remove.addEventListener('click', async () => {
-            const refresh = await axios.get('/refresh', { params: { loginId: loginId } }).catch((err) => console.error(err));
-            if (refresh.data.loginId != loginId) {
+            const currentId = getURLParams(location.search)[Object.keys(getURLParams(location.search))[0]];
+            if (currentId != loginId) {
                 return alert('삭제할 권한이 없습니다.');
             }
             await axios.delete(`/comments/${comment.id}`).catch((err) => console.error(err));

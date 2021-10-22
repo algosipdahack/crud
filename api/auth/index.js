@@ -3,6 +3,7 @@ const User = require('../../models/user');
 const env = process.env.NODE_ENV || 'development';
 const config = require('../../config/config.json')[env];
 const jwt = require('jsonwebtoken');
+const passport = require('passport');
 const bcrypt = require('bcrypt-nodejs');
 const router = express.Router();
 const { verifyToken, isLoggedIn, isNotLoggedIn } = require('../../routes/middlewares');
@@ -12,6 +13,7 @@ router.use((req, res, next) => {
   res.locals.user = req.user;
   next();
 });
+
 router.get('/', isNotLoggedIn, async (req, res, next) => {//get방식 라우터
   const users = await User.findAll().catch((err) => {
     console.error(err);
@@ -21,14 +23,20 @@ router.get('/', isNotLoggedIn, async (req, res, next) => {//get방식 라우터
 });
 
 
-router.get('/refresh', verifyToken, async (req, res) => {
-  if (req.decoded == null) {
-    res.redirect('/login');
-  }
-  else return res.status(201).json({ result: req.decoded })
+router.post('/refresh', isLoggedIn, async (req, res, next) => {
+  passport.authenticate('local', (authError, user, info) => {
+    if (authError) {
+      console.log(authError);
+      return next(authError);
+    }
+    if (!user) {
+      return res.redirect(`/?loginError=${info.message}`);
+    }
+    return user;
+  })(req, res, next);
 });
 
-router.get('/verify', async (req, res, next) => {//login.html로 라우팅
+router.get('/verify', isLoggedIn, async (req, res, next) => {//login.html로 라우팅
   const loginId = req.query.loginId;
   const users = await User.findAll().catch((err) => {
     console.error(err);
@@ -37,17 +45,6 @@ router.get('/verify', async (req, res, next) => {//login.html로 라우팅
   res.render('verify', { users: users, loginId: loginId });
 });
 
-router.get('/test', verifyToken, async (req, res) => {
-  const loginId = req.query.loginId;
-  const users = await User.findAll().catch((err) => {
-    console.error(err);
-    next(err);
-  });
-  if (req.decoded == null) {
-    res.render('login', { users: users });
-  }
-  res.render('verify', { users: users, loginId: loginId });
-});
 
 router.get('/logout', isLoggedIn, (req, res) => {
   req.logout();

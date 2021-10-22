@@ -17,7 +17,8 @@ exports.isLoggedIn = (req, res, next) => {
     if (req.isAuthenticated()) {
         next();
     } else {
-        res.status(403).json({ status: false, result: '로그인 필요' });
+        //res.status(403).json({ status: false, result: '로그인 필요' });
+        res.redirect('/');
     }
 };
 

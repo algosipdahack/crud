@@ -12,6 +12,18 @@ router.get('/', async (req, res, next) => {
   res.json(users);
 });
 
+router.get('/:id', async (req, res, next) => {
+  const id = req.params.id;
+  const user = await User.findOne({
+    where: { id: id },
+  }).catch((err) => {
+    console.error(err);
+    next(err);
+  });
+  console.log(user);
+  return user;
+})
+
 router.get('/:id/comments', async (req, res, next) => {
   const comments = await Comment.findAll({
     include: {
