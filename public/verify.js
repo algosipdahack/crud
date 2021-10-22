@@ -89,14 +89,7 @@ document.getElementById('comment-form').addEventListener('submit', async (e) => 
     if (!comment) {
         return alert('댓글을 입력하세요');
     }
-    const user = await axios.get(`/login/${loginId}`).catch((err) => console.error(err));
-    if (user.data != null) { //아이디 존재
-        const pw = user.data.pw;
-        await axios.get('/test', { params: { loginId: loginId, pw: pw } }).catch((err) => console.error(err));
-    } else
-        return alert('존재하지 않는 아이디입니다');
-    const id = user.data.id;
-    await axios.post('/comments', { id, comment }).catch((err) => console.error(err));
+    await axios.post('/comments', { loginId, comment }).catch((err) => console.error(err));
     getComment(id);//댓글
     //초기화
     e.target.userid.value = '';

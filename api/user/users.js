@@ -4,28 +4,13 @@ const Comment = require('../../models/comment');
 
 const router = express.Router();
 
-router.route('/')
-  .get(async (req, res, next) => {
-    const users = await User.findAll().catch((err) => {
-      console.error(err);
-      next(err);
-    });
-    res.json(users);
-  })
-  .post(async (req, res, next) => {
-    const user = await User.create({
-      loginId: req.body.loginId,
-      pw: req.body.pw,
-      name: req.body.name,
-      age: req.body.age,
-      married: req.body.married,
-    }).catch((err) => {
-      console.error(err);
-      next(err);
-    });
-    console.log(user);
-    res.status(201).json(user);
+router.get('/', async (req, res, next) => {
+  const users = await User.findAll().catch((err) => {
+    console.error(err);
+    next(err);
   });
+  res.json(users);
+});
 
 router.get('/:id/comments', async (req, res, next) => {
   const comments = await Comment.findAll({
@@ -37,7 +22,6 @@ router.get('/:id/comments', async (req, res, next) => {
     console.error(err);
     next(err);
   });
-  console.log(comments);
   res.json(comments);
 });
 

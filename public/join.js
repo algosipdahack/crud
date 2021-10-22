@@ -95,7 +95,7 @@ document.getElementById('user-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const loginId = e.target.loginId.value;
     const pw = e.target.pw.value;
-    const name = e.target.username.value;
+    const name = e.target.name.value;
     const age = e.target.age.value;
     const married = e.target.married.checked;
 
@@ -111,13 +111,11 @@ document.getElementById('user-form').addEventListener('submit', async (e) => {
     if (!age) {
         return alert('나이를 입력하세요');
     }
-    try {
-        await axios.post('/register', { loginId, pw, name, age, married });
-        location.href = `/login`;
-        getUser();//사용자 로딩
-    } catch (err) {
-        console.error(err);
-    }
+
+    await axios.post('/register', { loginId, pw, name, age, married }).catch((err) => console.error(err));
+    location.href = `/login`;
+    getUser();//사용자 로딩
+
     //초기화
     e.target.loginId.value = '';
     e.target.pw.value = '';

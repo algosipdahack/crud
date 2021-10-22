@@ -85,18 +85,16 @@ document.getElementById('user-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const loginId = e.target.loginId.value;
     const pw = e.target.pw.value;
+
     if (!loginId) {
         return alert('아이디를 입력하세요');
     }
     if (!pw) {
         return alert('비밀번호를 입력하세요');
     }
-    var login = await axios.post(`/token`, { loginId, pw }).catch((err, res, req) => console.error(err));
-    if (login != undefined)
-        await axios.get('/test', { loginId, pw }).catch((err) => console.error(err));
-    else return alert('아이디 또는 비밀번호를 다시 확인해주세요.');
 
-    location.href = `/test?loginId=${loginId}`;
+    await axios.post('/login/token', { loginId, pw }).catch((err, res, req) => console.error(err));
+    location.href = `/verify?loginId=${loginId}`;
     getUser();//사용자 로딩
     //초기화
     e.target.loginId.value = '';
