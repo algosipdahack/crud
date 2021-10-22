@@ -1,7 +1,6 @@
 document.querySelectorAll('#user-list tr').forEach((el) => {
     el.addEventListener('click', function () {
         const id = el.querySelector('td').textContent;
-        console.log(id);
         getComment(id);
     });
 });
@@ -9,7 +8,6 @@ document.querySelectorAll('#user-list tr').forEach((el) => {
 async function getUser() {
     const res = await axios.get('/users').catch((err) => console.error(err));
     const users = res.data;
-    console.log(users);
     const tbody = document.querySelector('#user-list tbody');
     tbody.innerHTML = '';
     users.map(function (user) {
@@ -94,7 +92,6 @@ document.getElementById('user-form').addEventListener('submit', async (e) => {
         return alert('비밀번호를 입력하세요');
     }
     var login = await axios.post(`/token`, { loginId, pw }).catch((err, res, req) => console.error(err));
-    console.log(login);
     if (login != undefined)
         await axios.get('/test', { loginId, pw }).catch((err) => console.error(err));
     else return alert('아이디 또는 비밀번호를 다시 확인해주세요.');

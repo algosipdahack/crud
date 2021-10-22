@@ -4,12 +4,7 @@ document.querySelectorAll('#user-list tr').forEach((el) => {
         getComment(id);
     });
 });
-//댓글 로딩
-/*
-    axios 정리
-    - 요청 객체에 URL이 있다.
 
-*/
 async function getComment(id) {
     const res = await axios.get(`/users/${id}/comments`).catch((err) => console.error(err));
     const comments = res.data;//배열형태로 반환
@@ -35,7 +30,7 @@ async function getComment(id) {
         edit.addEventListener('click', async () => {
             console.log('click button', loginId);
 
-            const refresh = await axios.get('/refresh', { params: { loginId: loginId } });
+            const refresh = await axios.get('/refresh', { params: { loginId: loginId } }).catch((err) => console.error(err));
             if (refresh.data.loginId != loginId) {
                 return alert('수정할 권한이 없습니다.');
             }
@@ -50,11 +45,11 @@ async function getComment(id) {
         const remove = document.createElement('button');
         remove.textContent = '삭제';
         remove.addEventListener('click', async () => {
-            const refresh = await axios.get('/refresh', { params: { loginId: loginId } });
+            const refresh = await axios.get('/refresh', { params: { loginId: loginId } }).catch((err) => console.error(err));
             if (refresh.data.loginId != loginId) {
                 return alert('삭제할 권한이 없습니다.');
             }
-            await axios.delete(`/comments/${comment.id}`).catch((err) => console.error(err));;
+            await axios.delete(`/comments/${comment.id}`).catch((err) => console.error(err));
             getComment(id);
         });
 
@@ -76,25 +71,13 @@ function getURLParams(url) {
 
 document.getElementById('user-form').addEventListener('submit', async (e) => {//회원탈퇴
     e.preventDefault();
-    const loginId = e.target.loginId.value;
-    const pw = e.target.pw.value;
-    if (!loginId) {
-        return alert('아이디를 입력하세요');
+    const userid = document.getElementById('userid').value;
+    let isTrue = confirm("회원탈퇴를 진행하시겠습니까?");
+    if (isTrue == true) {
+        await axios.delete(`/delete/${userid}`).catch((err) => console.error(err));
+        alert('회원탈퇴 되었습니다');
+        location.href = '/';
     }
-    if (!pw) {
-        return alert('비밀번호를 입력하세요');
-    }
-    var login = await axios.post(`/token`, { loginId, pw }).catch((err, res, req) => console.error(err));
-    console.log(login);
-    if (login != undefined)
-        await axios.get('/test', { loginId, pw }).catch((err) => console.error(err));
-    else return alert('아이디 또는 비밀번호를 다시 확인해주세요.');
-
-    location.href = `/test?loginId=${loginId}`;
-    getUser();//사용자 로딩
-    //초기화
-    e.target.loginId.value = '';
-    e.target.pw.value = '';
 });
 
 document.getElementById('userid').value = getURLParams(location.search)[Object.keys(getURLParams(location.search))[0]];
@@ -106,7 +89,7 @@ document.getElementById('comment-form').addEventListener('submit', async (e) => 
     if (!comment) {
         return alert('댓글을 입력하세요');
     }
-    const user = await axios.get(`/login/${loginId}`);
+    const user = await axios.get(`/login/${loginId}`).catch((err) => console.error(err));
     if (user.data != null) { //아이디 존재
         const pw = user.data.pw;
         await axios.get('/test', { params: { loginId: loginId, pw: pw } }).catch((err) => console.error(err));

@@ -17,32 +17,9 @@ router.get('/', async (req, res, next) => {//get방식 라우터
   res.render('sequelize', { users });
 });
 
-router.route('/login/:id')
-  .get(async (req, res, next) => {
-    const id = req.params.id;
-    const user = await User.findOne({
-      where: {
-        loginId: id,
-      },
-    }).catch((e) => {
-      console.log(e);
-      res.status(500).json({ status: false, result: 'No user' });
-    });
-    res.json(user);
-  });
-
-router.get('/login', async (req, res, next) => {//get방식 라우터
-  const users = await User.findAll().catch((err) => {
-    console.error(err);
-    next(err);
-  });
-  res.render('login', { users });
-});
 
 router.get('/test', verifyToken, async (req, res) => {
   const loginId = req.query.loginId;
-  console.log('test', loginId);
-  console.log(req);
   const users = await User.findAll().catch((err) => {
     console.error(err);
     next(err);
@@ -54,12 +31,10 @@ router.get('/test', verifyToken, async (req, res) => {
 });
 
 router.get('/refresh', verifyToken, async (req, res) => {
-  console.log(req.query.loginId);
-  console.log(req.decoded.loginId);
   if (req.decoded == null) {
     res.render('login', { users: users });
   }
-  else res.json(req.decoded);
+  else return response(res, 201, req.decoded);
 })
 
 router.post('/token', async (req, res, next) => {
@@ -99,7 +74,17 @@ router.post('/token', async (req, res, next) => {
 
 router.get('/logout', (req, res) => {
   res.clearCookie('user');
-  res.redirect('/');
+  res.redirect('/login');
+});
+
+router.delete('/delete/:id', (req, res) => {
+  const id = req.params.id;
+  const result = User.destroy({
+    where: { loginId: id },
+  }).catch((e) => {
+    res.status(500).json({ status: false, result: "delete error" });
+  });
+  return response(res, 201, result);
 });
 
 router.post('/register', async (req, res, next) => {
@@ -131,7 +116,6 @@ router.post('/register', async (req, res, next) => {
             res.status(500).json({ status: false, result: "Bcrpyt hashing error" });
           }
           else {
-            console.log(hash);
             const user = User.create({
               loginId: loginId,
               pw: bcrypt.hashSync(pw),
@@ -139,7 +123,6 @@ router.post('/register', async (req, res, next) => {
               age: age,
               married: married
             })
-            console.log(user);
             res.status(201).json({ status: true, result: "register success" });
           }
         });

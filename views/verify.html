@@ -9,10 +9,14 @@
     </style>
   </head>
   <body>
-      <span class="user-name">안녕하세요! {{loginId}}님</span>
-      <br>
-      <button type="button" onclick="location.href='/logout'">로그아웃</button>
-      <button type="submit">회원탈퇴</button>
+      <div>
+        <form id="user-form">
+          <span class="user-name">안녕하세요! {{loginId}}님</span>
+          <br>
+          <button type="button" onclick="location.href='/logout'">로그아웃</button>
+          <button type="submit">회원탈퇴</button>
+        </form>
+      </div>
     <br>
     <table id="user-list">
       <thead>
