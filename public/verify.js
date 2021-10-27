@@ -6,7 +6,7 @@ document.querySelectorAll('#user-list tr').forEach((el) => {
 });
 
 async function getComment(id) {
-    const res = await axios.get(`/users/${id}/comments`).catch((err) => console.error(err));
+    const res = await axios.get(`/users/${id}/comments`).catch((err) => console.log(err));
     const comments = res.data;//배열형태로 반환
     const tbody = document.querySelector('#comment-list tbody');
     tbody.innerHTML = '';
@@ -28,12 +28,12 @@ async function getComment(id) {
         const edit = document.createElement('button');
         edit.textContent = '수정';
         edit.addEventListener('click', async () => {
-            console.log('click button', loginId);
             const currentId = getURLParams(location.search)[Object.keys(getURLParams(location.search))[0]];
             if (currentId != loginId) {
                 return alert('수정할 권한이 없습니다.');
             }
             const newComment = prompt('바꿀 내용을 입력하세요');
+            console.log(newComment);
             if (!newComment) {
                 return alert('내용을 반드시 입력하셔야 합니다.');
             }
@@ -73,7 +73,7 @@ document.getElementById('user-form').addEventListener('submit', async (e) => {//
     const userid = document.getElementById('userid').value;
     let isTrue = confirm("회원탈퇴를 진행하시겠습니까?");
     if (isTrue == true) {
-        await axios.delete(`/delete/${userid}`).catch((err) => console.error(err));
+        await axios.delete(`/users/${userid}`).catch((err) => console.error(err));
         alert('회원탈퇴 되었습니다');
         location.href = '/';
     }

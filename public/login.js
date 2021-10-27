@@ -13,7 +13,7 @@ async function getUser() {
     users.map(function (user) {
         const row = document.createElement('tr');
         row.addEventListener('click', () => {
-            getComment(user.loginId);
+            getComment(user.id);
         });
         let td = document.createElement('td');
         td.textContent = user.id;
@@ -40,7 +40,7 @@ async function getUser() {
 
 */
 async function getComment(id) {
-    const res = await axios.get(`/users/${id}/comments`).catch((err) => console.error(err));
+    const res = await axios.get(`/users/${id}/comments`).catch((err) => console.log(err));
     const comments = res.data;//배열형태로 반환
     const tbody = document.querySelector('#comment-list tbody');
     tbody.innerHTML = '';
@@ -93,7 +93,7 @@ document.getElementById('user-form').addEventListener('submit', async (e) => {
         return alert('비밀번호를 입력하세요');
     }
 
-    await axios.post('/login/token', { loginId, pw }).catch((err, res, req) => console.error(err));
+    await axios.post('/auth/token', { loginId, pw }).catch((err, res, req) => console.error(err));
     location.href = `/verify?loginId=${loginId}`;
     getUser();//사용자 로딩
     //초기화
