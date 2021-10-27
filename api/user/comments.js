@@ -44,6 +44,7 @@ const remove = async (req, res, next) => {
     if (!result) return response(res, 403, 'cannot find id');
     return response(res, 200, result);
 }
+
 module.exports = {
     create,
     patch,

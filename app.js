@@ -53,9 +53,13 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 const user = require('./api/user/users');
 const comment = require('./api/user/comments');
 const auth = require('./api/auth/index');
-const indexRouter = require('./page/auth');
+const indexRouter = require('./page/index');
+const loginRouter = require('./page/login');
+const verifyRouter = require('./page/verify');
 
 app.use('/', indexRouter);
+app.use('/login', loginRouter);
+app.use('/verify', verifyRouter);
 
 /* api routing */
 app
