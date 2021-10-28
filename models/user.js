@@ -24,19 +24,9 @@ module.exports = class User extends Sequelize.Model {//알아서 id를 기본키
                 type: Sequelize.BOOLEAN,//tinyint
                 allowNull: false,
             },
-            created_at: {
-                type: Sequelize.DATE,//datetime
-                allowNull: false,
-                defaultValue: Sequelize.NOW,//현재시간을 기본값으로 설정
-            },
-            removed_at: {
-                type: Sequelize.DATE,//datetime
-                allowNull: true,
-                defaultValue: null,
-            },
         }, {//테이블 옵션
             sequelize,
-            timestamps: false, //로우가 생성/수정될때 시간이 자동으로 입력된다.
+            timestamps: true, //로우가 생성/수정될때 시간이 자동으로 입력된다.
             underscored: false, //테이블명 & 컬럼명을 스네이크 케이스로 바꿈(creaㄷted_at)
             modelName: 'User', //모델 이름 설정
             tableName: 'users', //테이블 명(소문자로 만듦)

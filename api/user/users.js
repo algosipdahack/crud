@@ -85,11 +85,9 @@ const update = async (req, res, next) => {
 }
 
 const remove = async (req, res, next) => {
-  const result = await User.update({
-    removed_at: NOW,
-  }, {
-    where: { id: req.params.id },
-  }).catch((err) => {
+  const result = User.destroy({
+    where: { loginId: id },
+  }).catch((e) => {
     console.error(err);
     return next(err);
   });
