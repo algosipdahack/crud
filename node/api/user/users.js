@@ -1,6 +1,6 @@
 const response = require("../../response");
-const { User, Comment } = require('../../models');
-const { NOW } = require('sequelize');
+const User = require('../../models/user');
+const Comment = require('../../models/comment');
 const bcrypt = require('bcrypt-nodejs');
 
 

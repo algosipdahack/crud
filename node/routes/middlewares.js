@@ -1,9 +1,3 @@
-const jwt = require('jsonwebtoken');
-const env = process.env.NODE_ENV || 'development';
-const config = require('../config/config.json')[env];
-const SECRET = config.secret_key;
-
-
 exports.isLoggedIn = (req, res, next) => {
     if (req.isAuthenticated()) {
         next();

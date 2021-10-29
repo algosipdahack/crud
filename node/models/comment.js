@@ -3,6 +3,11 @@ const Sequelize = require('sequelize');
 module.exports = class Comment extends Sequelize.Model {//commenter가 없음. 뭔가 이상함 -> commenter은 foreignKey로 사용되었기 때문이다.
     static init(sequelize) {
         return super.init({
+            parentId: {
+                type: Sequelize.INTEGER.UNSIGNED,
+                allowNull: true,
+                defaultValue: null,
+            },
             comment: {
                 type: Sequelize.STRING(100),//varchar(100)
                 allowNull: false,

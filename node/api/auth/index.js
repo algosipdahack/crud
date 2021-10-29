@@ -1,5 +1,4 @@
 const passport = require('passport');
-const response = require("../../response");
 
 const create = async (req, res, next) => {
   passport.authenticate('local', (authError, user, info) => {

@@ -1,4 +1,5 @@
-const { User, Comment } = require('../../models');
+const User = require('../../models/user');
+const Comment = require('../../models/comment');
 const response = require("../../response");
 
 const create = async (req, res, next) => {
@@ -10,9 +11,11 @@ const create = async (req, res, next) => {
         return next(err);
     });
     if (!user) return response(res, 400, 'user is not exist');
+    if (req.body.parentId == undefined) req.body.parentId = null;
     const comment = await Comment.create({
         commenter: user.id,
         comment: req.body.comment,
+        parentId: req.body.parentId,
     }).catch((err) => {
         console.error(err);
         return next(err);
@@ -37,7 +40,14 @@ const patch = async (req, res, next) => {
 }
 
 const remove = async (req, res, next) => {
-    const result = await Comment.destroy({ where: { id: req.params.id } }).catch((err) => {
+    const result = await Comment.destroy({
+        where: {
+            [Op.or]: [
+                { id: req.params.id },
+                { parentId: req.params.id }
+            ]
+        }
+    }).catch((err) => {
         console.error(err);
         return next(err);
     });
@@ -45,8 +55,19 @@ const remove = async (req, res, next) => {
     return response(res, 200, result);
 }
 
+const read = async (req, res, next) => {
+    const comments = await Comment.findAll({
+        where: { parentId: req.params.id }
+    }).catch((err) => {
+        console.error(err);
+        return next(err);
+    });
+    if (!comments) return response(res, 400, 'cannot find comment');
+    return res.json(comments);
+}
 module.exports = {
     create,
     patch,
-    remove
+    remove,
+    read
 }
