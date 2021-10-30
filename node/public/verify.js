@@ -24,12 +24,14 @@ async function getComment(id) {
         td = document.createElement('td');
         td.textContent = comment.comment;//댓글
         row.appendChild(td);
-        var loginId = comment.User.loginId;
+        var commentId = comment.User.loginId;
         const edit = document.createElement('button');
         edit.textContent = '수정';
         edit.addEventListener('click', async () => {
+            await axios.get(`/auth/token?commentId=${commentId}`).catch((err) => console.error(err));
+
             const currentId = getURLParams(location.search)[Object.keys(getURLParams(location.search))[0]];
-            if (currentId != loginId) {
+            if (currentId != commentId) {
                 return alert('수정할 권한이 없습니다.');
             }
             const newComment = prompt('바꿀 내용을 입력하세요');
@@ -44,8 +46,10 @@ async function getComment(id) {
         const remove = document.createElement('button');
         remove.textContent = '삭제';
         remove.addEventListener('click', async () => {
+            await axios.get(`/auth/token?commentId=${commentId}`).catch((err) => console.error(err));
+
             const currentId = getURLParams(location.search)[Object.keys(getURLParams(location.search))[0]];
-            if (currentId != loginId) {
+            if (currentId != commentId) {
                 return alert('삭제할 권한이 없습니다.');
             }
             await axios.delete(`/comments/${comment.id}`).catch((err) => console.error(err));

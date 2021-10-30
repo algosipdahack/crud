@@ -71,11 +71,12 @@ app
   .patch('/users/:id', isLoggedIn, user.update)
   .delete('/users/:id', isLoggedIn, user.remove)
   .get('/users/:id/comments', user.commentRead)
-  .post('/comments', comment.create)
+  .post('/comments', isLoggedIn, comment.create)
   .get('/comments/:id', isLoggedIn, comment.read)
   .patch('/comments/:id', isLoggedIn, comment.patch)
   .delete('/comments/:id', isLoggedIn, comment.remove)
   .post('/auth/token', isNotLoggedIn, auth.create)
+  .get('/auth/token',isLoggedIn,auth.verify)
 
 app.use((req, res, next) => {
   const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
