@@ -3,13 +3,14 @@ CREATE TABLE users (
     `loginId`       VARCHAR(20)   NOT NULL,
     `pw`            VARCHAR(100)  NOT NULL,
     `name`          VARCHAR(20)   NOT NULL,
-    `age`            INT UNSIGNED NOT NULL,
+    `age`            INT UNSIGNED  NULL,
     `married`         TINYINT     NOT NULL,
     PRIMARY KEY (id)
 );
 
 CREATE TABLE comments (
     `id`             INT          NOT NULL,
+    `parentId`       INT          NULL,
     `commenter`      INT          NOT NULL,
     `comment`        VARCHAR(100)      NOT NULL,
     PRIMARY KEY (id),

@@ -1,9 +1,9 @@
 {
   "development": {
-    "username": "admn",
+    "username": "admin",
     "password": "P@ssw0rd",
     "database": "nodejs",
-    "host": "127.0.0.1",
+    "host": "mysqldb",
     "dialect": "mysql",
     "secret_key": "api"
   },

@@ -11,8 +11,12 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
     host: dbConfig.HOST,
     dialect: dbConfig.dialect,
     port: dbConfig.port,
-    operatorsAliases: false,
-
+    operatorsAliases: 0,
+    // dialectOptions: {
+    //     options: {
+    //         requestTimeout: 3000
+    //     }
+    // },
     pool: {
         max: dbConfig.pool.max,
         min: dbConfig.pool.min,

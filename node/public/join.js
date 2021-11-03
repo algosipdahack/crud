@@ -90,6 +90,7 @@ document.getElementById('user-form').addEventListener('submit', async (e) => {
     const name = e.target.name.value;
     const age = e.target.age.value;
     const married = e.target.married.checked;
+    const isAdmin = e.target.isAdmin.checked;
 
     if (!loginId) {
         return alert('아이디를 입력하세요');
@@ -104,7 +105,7 @@ document.getElementById('user-form').addEventListener('submit', async (e) => {
         return alert('나이를 입력하세요');
     }
 
-    await axios.post('/users', { loginId, pw, name, age, married }).catch((err) => console.error(err));
+    await axios.post('/users', { loginId, pw, name, age, married, isAdmin }).catch((err) => console.error(err));
     location.href = `/login`;
     getUser();//사용자 로딩
 
@@ -114,5 +115,6 @@ document.getElementById('user-form').addEventListener('submit', async (e) => {
     e.target.username.value = '';
     e.target.age.value = '';
     e.target.married.checked = false;
+    e.target.isAdmin.checked = false;
 });
 

@@ -67,16 +67,21 @@ app
   .get('/users', user.readAll)
   .post('/users', isNotLoggedIn, user.register)
   .get('/users/logout', user.logout)
+  //:id -> loginId
   .get('/users/:id', user.read)
   .patch('/users/:id', isLoggedIn, user.update)
-  .delete('/users/:id', isLoggedIn, user.remove)
-  .get('/users/:id/comments', user.commentRead)
+  .delete('/users/:id', isLoggedIn, user.remove) 
+  .get('/users/:id/comments', user.commentRead) //댓글 보여줌
+  
   .post('/comments', isLoggedIn, comment.create)
-  .get('/comments/:id', isLoggedIn, comment.read)
+  .get('/comments/:id', isLoggedIn, comment.read) //대댓글 보여줌
   .patch('/comments/:id', isLoggedIn, comment.patch)
   .delete('/comments/:id', isLoggedIn, comment.remove)
   .post('/auth/token', isNotLoggedIn, auth.create)
-  .get('/auth/token',isLoggedIn,auth.verify)
+  .get('/auth/token', isLoggedIn, auth.verify)
+  
+  /* 관리자 페이지 */
+  .get('/admin')
 
 app.use((req, res, next) => {
   const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);

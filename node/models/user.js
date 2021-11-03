@@ -24,6 +24,10 @@ module.exports = class User extends Sequelize.Model {//알아서 id를 기본키
                 type: Sequelize.BOOLEAN,//tinyint
                 allowNull: false,
             },
+            isAdmin: { // 관리자 = 1, 일반사용자 = 0
+                type: Sequelize.BOOLEAN,//tinyint
+                allowNull: false,
+            }
         }, {//테이블 옵션
             sequelize,
             timestamps: true, //로우가 생성/수정될때 시간이 자동으로 입력된다.

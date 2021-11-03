@@ -8,8 +8,10 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
       - MYSQL_DATABASE=$MYSQL_DATABASE
+      - MYSQL_PASSWORD=$MYSQL_ROOT_PASSWORD
+      - MYSQL_USER=$MYSQL_USER
     ports:
-      - $MYSQL_LOCAL_PORT:$MYSQL_DOCKER_PORT
+      - 3306:3306
     volumes:
       - ./db/conf.d:/etc/mysql/conf.d
       - ./db/data:/var/lib/mysql
@@ -23,9 +25,9 @@ services:
     restart: unless-stopped
     env_file: ./node/.env
     ports:
-      - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
+      - 3000:3000
     environment:
-      - DB_HOST=mysqldb
+      - DB_HOST=$DB_HOST
       - DB_USER=$MYSQL_USER
       - DB_PASSWORD=$MYSQL_ROOT_PASSWORD
       - DB_NAME=$MYSQL_DATABASE

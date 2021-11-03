@@ -25,12 +25,12 @@ async function getComment(id) {
         td.textContent = comment.comment;//댓글
         row.appendChild(td);
         var commentId = comment.User.loginId;
+        const currentId = getURLParams(location.search)[Object.keys(getURLParams(location.search))[0]];
         const edit = document.createElement('button');
         edit.textContent = '수정';
         edit.addEventListener('click', async () => {
             await axios.get(`/auth/token?commentId=${commentId}`).catch((err) => console.error(err));
 
-            const currentId = getURLParams(location.search)[Object.keys(getURLParams(location.search))[0]];
             if (currentId != commentId) {
                 return alert('수정할 권한이 없습니다.');
             }
@@ -48,21 +48,12 @@ async function getComment(id) {
         remove.addEventListener('click', async () => {
             await axios.get(`/auth/token?commentId=${commentId}`).catch((err) => console.error(err));
 
-            const currentId = getURLParams(location.search)[Object.keys(getURLParams(location.search))[0]];
             if (currentId != commentId) {
                 return alert('삭제할 권한이 없습니다.');
             }
             await axios.delete(`/comments/${comment.id}`).catch((err) => console.error(err));
             getComment(id);
         });
-
-        td = document.createElement('td');
-        td.appendChild(edit);
-        row.appendChild(td);//수정 추가
-        td = document.createElement('td');
-        td.appendChild(remove);
-        row.appendChild(td);//삭제 추가
-        tbody.appendChild(row);//줄 전체 추가
     });
 }
 
@@ -72,9 +63,11 @@ function getURLParams(url) {
     return result;
 }
 
+document.getElementById('userid').value = getURLParams(location.search)[Object.keys(getURLParams(location.search))[0]];
+
 document.getElementById('user-form').addEventListener('submit', async (e) => {//회원탈퇴
     e.preventDefault();
-    const userid = document.getElementById('userid').value;
+    const userid = document.getElementById('userid').value;//로그인 아이디
     let isTrue = confirm("회원탈퇴를 진행하시겠습니까?");
     if (isTrue == true) {
         await axios.delete(`/users/${userid}`).catch((err) => console.error(err));
@@ -83,7 +76,6 @@ document.getElementById('user-form').addEventListener('submit', async (e) => {//
     }
 });
 
-document.getElementById('userid').value = getURLParams(location.search)[Object.keys(getURLParams(location.search))[0]];
 
 document.getElementById('comment-form').addEventListener('submit', async (e) => {
     e.preventDefault();
