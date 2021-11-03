@@ -2,11 +2,13 @@ const response = require("../../response");
 const User = require('../../models/user');
 const Comment = require('../../models/comment');
 const bcrypt = require('bcrypt-nodejs');
+const logger = require('../../config/winston');
 
 //get('/users')
 const readAll = async (req, res, next) => {
   const users = await User.findAll().catch((err) => {
     console.error(err);
+    logger.error(err);
     return next(err);
   });
   return res.json(users);
@@ -21,20 +23,24 @@ const register = async (req, res, next) => {
       loginId: loginId
     }
   }).catch((e) => {
+    logger.error(e);
     return res.redirect('/join?error=exist');
   });
 
   if (result === 1) {
+    logger.error("userid already exist");
     return response(res, 304, "userid already exist");
   }
   else {
     bcrypt.genSalt(10, (err, salt) => {
       if (err) {
+        logger.error("Bcrypt genSalt error");
         return response(res, 500, "Bcrypt genSalt error");
       }
       else {
         bcrypt.hash(pw, salt, null, (err, hash) => {
           if (err) {
+            logger.error("Bcrpyt hashing error");
             return response(res, 500, "Bcrpyt hashing error");
           }
           else {
@@ -47,8 +53,10 @@ const register = async (req, res, next) => {
               isAdmin
             }).catch((e) => {
               console.error(e);
+              logger.error(e);
               return next(e);
             });
+            logger.info("register success");
             return response(res, 201, "register success");
           }
         });
@@ -64,10 +72,15 @@ const read = async (req, res, next) => {
     where: { loginId: id, deletedAt: null },
   }).catch((err) => {
     console.error(err);
+    logger.error(err);
     return next(err);
   });
 
-  if (!user) return response(res, 400, 'user is not exist');
+  if (!user) {
+    logger.error('user is not exist');
+    return response(res, 400, 'user is not exist');
+  }
+  logger.info('get /users/id success');
   return response(res, 200, user);
 }
 
@@ -75,8 +88,11 @@ const read = async (req, res, next) => {
 const update = async (req, res, next) => {
   const loginId = req.user.dataValues.loginId; //현재 로그인된 아이디
   const id = req.params.id;
-  
-  if (loginId != id && !req.user.dataValues.isAdmin) return response(res, 403, 'No Authentication');
+
+  if (loginId != id && !req.user.dataValues.isAdmin) {
+    logger.error('No Authentication');
+    return response(res, 403, 'No Authentication');
+  }
 
   const result = await User.update({
     name: req.body.name,
@@ -85,11 +101,16 @@ const update = async (req, res, next) => {
   }, {
     where: { loginId: id },
   }).catch((err) => {
+    logger.error(err);
     console.error(err);
     return next(err);
   });
 
-  if (!result) return response(res, 400, 'cannot find id');
+  if (!result) {
+    logger.error('cannot find id');
+    return response(res, 400, 'cannot find id');
+  }
+  logger.info('patch /users/id success');
   return response(res, 200, result);
 }
 
@@ -97,17 +118,22 @@ const update = async (req, res, next) => {
 const remove = async (req, res, next) => {
   const loginId = req.user.dataValues.loginId; //현재 로그인된 아이디
   const id = req.params.id;
-  
-  if (loginId != id && !req.user.dataValues.isAdmin) return response(res, 403, 'No Authentication');
-  
+
+  if (loginId != id && !req.user.dataValues.isAdmin) {
+    logger.error('No Authentication');
+    return response(res, 403, 'No Authentication');
+  }
+
   const result = User.destroy({
     where: { loginId: id },
   }).catch((e) => {
+    logger.error(err);
     console.error(err);
     return next(err);
   });
 
   if (!result) return response(res, 400, 'cannot find id');
+  logger.info('delete /users/id success');
   return response(res, 200);
 }
 
@@ -115,6 +141,7 @@ const remove = async (req, res, next) => {
 const logout = async (req, res, next) => {
   req.logout();
   req.session.destroy();
+  logger.info('logout success');
   res.redirect('/login');
 }
 
@@ -125,30 +152,31 @@ const commentRead = async (req, res, next) => {
   //존재하는 유저인지 확인
   const user = await User.findOne({
     where: {
-      [Op.and]: [
-        { id: id },
-        { deletedAt: null }
-      ]
+      id: id,
+      deletedAt: null
     }
   });
-  if (!user) return response(res, 400, 'cannot find user');
+  if (!user) {
+    logger.error('cannot find user');
+    return response(res, 400, 'cannot find user');
+  }
 
 
   const comments = await Comment.findAll({
     include: {
       model: User,
       where: {
-        [Op.and]: [
-          { id: id },
-          { parentId: null }
-        ]
+        id: id,
+        parentId: null
       }
     }
   }).catch((err) => {
+    logger.error(err);
     console.error(err);
     return next(err);
   });
   if (!comments) return response(res, 400, 'cannot find comment');
+  logger.info('get /users/id/comments success');
   return res.json(comments);
 }
 

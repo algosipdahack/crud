@@ -3,7 +3,7 @@
     "username": "admin",
     "password": "P@ssw0rd",
     "database": "nodejs",
-    "host": "mysqldb",
+    "host": "localhost",
     "dialect": "mysql",
     "secret_key": "api"
   },

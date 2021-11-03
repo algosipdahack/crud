@@ -1,28 +1,39 @@
 const User = require('../../models/user');
 const Comment = require('../../models/comment');
 const response = require("../../response");
-
+const logger = require('../../config/winston');
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 //post('/comments')
 const create = async (req, res, next) => {
     const user = await User.findOne({
         attributes: ['id'],
         where: { loginId: req.body.loginId },
     }).catch((err) => {
+        logger.error(err);
         console.error(err);
         return next(err);
     });
-    if (!user) return response(res, 400, 'user is not exist');
+    if (!user) {
+        logger.error('user is not exist');
+        return response(res, 400, 'user is not exist');
+    }
     if (req.body.parentId == undefined) req.body.parentId = null;
     const comment = await Comment.create({
         commenter: user.id,
         comment: req.body.comment,
         parentId: req.body.parentId,
     }).catch((err) => {
+        logger.error(err);
         console.error(err);
         return next(err);
     });
 
-    if (!comment) return response(res, 400, 'comment is not exist');
+    if (!comment) {
+        logger.error('comment is not exist');
+        return response(res, 400, 'comment is not exist');
+    }
+    logger.info('create /comments success');
     return response(res, 201, comment);
 }
 
@@ -33,11 +44,16 @@ const patch = async (req, res, next) => {
     }, {
         where: { id: req.params.id },
     }).catch((err) => {
+        logger.error(err);
         console.error(err);
         return next(err);
     });
 
-    if (!result) return response(res, 400, 'comment is not exist');
+    if (!result) {
+        logger.error('comment is not exist');
+        return response(res, 400, 'comment is not exist');
+    }
+    logger.info('patch /comments/id success');
     return response(res, 200, result);
 }
 
@@ -52,9 +68,14 @@ const remove = async (req, res, next) => {
         }
     }).catch((err) => {
         console.error(err);
+        logger.error(err);
         return next(err);
     });
-    if (!result) return response(res, 403, 'cannot find id');
+    if (!result) {
+        logger.error('cannot find id');
+        return response(res, 403, 'cannot find id');
+    }
+    logger.info('delete /comments/id success');
     return response(res, 200, result);
 }
 
@@ -79,22 +100,28 @@ const read = async (req, res, next) => {
         },
     }).catch((err) => {
         console.error(err);
+        logger.error(err);
         return next(err);
     });
-    if (!user) return response(res, 400, 'comment is not exist');
-
+    if (!user) {
+        logger.error('comment is not exist');
+        return response(res, 400, 'comment is not exist');
+    }
     const comments = await Comment.findAll({
         where: {
-            [Op.and]: [
-                { id: req.query.id },
-                { parentId: req.params.id }
-            ]
+            id: req.query.id,
+            parentId: req.params.id
         }
     }).catch((err) => {
         console.error(err);
+        logger.error(err);
         return next(err);
     });
-    if (!comments) return response(res, 400, 'cannot find comment');
+    if (!comments) {
+        logger.error('cannot find comment');
+        return response(res, 400, 'cannot find comment');
+    }
+    logger.info('read /comments/id success');
     return res.json(comments);
 }
 module.exports = {

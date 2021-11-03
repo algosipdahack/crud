@@ -1,0 +1,14 @@
+{
+    "keep": {
+        "days": false,
+        "amount": 30
+    },
+    "auditLog": "C:\\node.js\\crud\\node\\logs\\error\\.98728aefc68602dbda71d367e5d9112626b38ac4-audit.json",
+    "files": [
+        {
+            "date": 1635977113056,
+            "name": "C:\\node.js\\crud\\node\\logs\\error\\2021-11-04.error.log",
+            "hash": "345ec108b4f0affb8ccb6f6623470053"
+        }
+    ]
+}

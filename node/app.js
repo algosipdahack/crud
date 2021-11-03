@@ -5,6 +5,9 @@ const nunjucks = require('nunjucks');
 const session = require('express-session');
 const passport = require('passport');
 const passportConfig = require('./passport');
+const winston = require('./config/winston')
+
+
 require("dotenv").config();
 var cookieParser = require('cookie-parser');
 const PORT = process.env.NODE_DOCKER_PORT || 8080;
