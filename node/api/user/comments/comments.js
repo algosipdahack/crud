@@ -85,12 +85,12 @@ const read = async (req, res, next) => {
     const user = await User.findOne({
         where: {
             [Op.or]: [
-                {//대댓글의 작성자가 삭제되었거나
+                {//대댓글의 작성자가 존재하거나
                     id: req.query.id,
                     deletedAt: {
                         [Op.ne]: null
                     }
-                }, {//댓글의 작성자가 삭제되었을 경우
+                }, {//댓글의 작성자가 존재할 경우
                     parentId: req.query.id,
                     deletedAt: {
                         [Op.ne]: null

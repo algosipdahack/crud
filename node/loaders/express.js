@@ -2,7 +2,8 @@ const express = require('express');
 const path = require('path');
 const morgan = require('morgan');
 const nunjucks = require('nunjucks');
-const routes = require('../api');
+const api = require('../api');
+const routes = require('../page');
 const PORT = process.env.NODE_DOCKER_PORT || 8080;
 var cookieParser = require('cookie-parser');
 require("dotenv").config();
@@ -13,6 +14,8 @@ module.exports = async ({ app }) => {
     app.use(express.json());
     app.use(express.urlencoded({ extended: false }));
     app.use(cookieParser())
+    app.use('/', routes);
+    app.use('/', api);
 
     app.use((req, res, next) => {
         const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
@@ -28,7 +31,6 @@ module.exports = async ({ app }) => {
         res.render('error');
     });
 
-    app.use('/', routes);
     // view engine setup
     app.set('view engine', 'html');
     nunjucks.configure('views', {

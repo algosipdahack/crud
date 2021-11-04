@@ -1,0 +1,4 @@
+2021-11-05 01:57:59 error: cannot find user
+2021-11-05 01:58:30 error: Unknown column 'User.parentId' in 'on clause'
+2021-11-05 02:02:15 error: cannot find comment id
+2021-11-05 02:31:19 error: Unknown column 'User.parentId' in 'on clause'

@@ -1,0 +1,87 @@
+### 테스트 API
+GET http://localhost:8080/ HTTP/1.1
+
+###
+GET http://localhost:8080/login/ HTTP/1.1
+###
+GET http://localhost:8080/verify/ HTTP/1.1
+###
+GET http://localhost:8080/users/ HTTP/1.1
+###
+POST http://localhost:8080/users/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "loginId": "bb",
+    "pw": "bb",
+    "name": "dd",
+    "age": 23,
+    "married": true,
+    "isAdmin": true
+}
+###
+GET http://localhost:8080/users/dd HTTP/1.1
+###
+PATCH http://localhost:8080/users/dd HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "bb",
+    "age": 23,
+    "married": false
+}
+###
+DELETE http://localhost:8080/users/bb HTTP/1.1
+###
+GET http://localhost:8080/users/logout HTTP/1.1
+
+###ERROR
+GET http://localhost:8080/users/1/comments HTTP/1.1
+###
+POST http://localhost:8080/auth/token HTTP/1.1
+Content-Type: application/json
+
+{
+    "loginId": "bb",
+    "pw": "bb"
+}
+
+###
+GET http://localhost:8080/auth/token?commentId=dd HTTP/1.1
+
+###
+PATCH http://localhost:8080/auth/levelup HTTP/1.1
+Content-Type: application/json
+
+{
+    "loginId": "dd"
+}
+###
+POST http://localhost:8080/comments HTTP/1.1
+Content-Type: application/json
+
+{
+    "loginId": "bb",
+    "comment" : "hihello",
+    "parentId": null
+}
+###
+PATCH http://localhost:8080/comments/1 HTTP/1.1
+Content-Type: application/json
+
+{
+    "comment" : "wowowow"
+}
+
+###
+DELETE http://localhost:8080/comments/1 HTTP/1.1
+###
+GET http://localhost:8080/comments/1?commentId=dd HTTP/1.1
+
+###
+POST http://localhost:8080/post/img HTTP/1.1
+Content-Type: application/json
+
+{
+
+}

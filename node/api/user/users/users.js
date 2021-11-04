@@ -145,6 +145,7 @@ const logout = async (req, res, next) => {
   res.redirect('/login');
 }
 
+//ERROR
 //get('/users/:id/comments')
 const commentRead = async (req, res, next) => {
   const id = req.params.id;
@@ -167,7 +168,7 @@ const commentRead = async (req, res, next) => {
       model: User,
       where: {
         id: id,
-        parentId: null
+        //parentId: null
       }
     }
   }).catch((err) => {

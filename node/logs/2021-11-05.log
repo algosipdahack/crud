@@ -1,0 +1,16 @@
+2021-11-05 01:54:09 info: register success
+2021-11-05 01:54:41 info: get /users/id success
+2021-11-05 01:57:59 error: cannot find user
+2021-11-05 01:58:23 info: get /users/id success
+2021-11-05 01:58:30 error: Unknown column 'User.parentId' in 'on clause'
+2021-11-05 02:01:18 info: post auth/token success
+2021-11-05 02:02:15 error: cannot find comment id
+2021-11-05 02:05:03 info: register success
+2021-11-05 02:05:16 info: post auth/token success
+2021-11-05 02:06:40 info: logout success
+2021-11-05 02:06:57 info: post auth/token success
+2021-11-05 02:16:34 info: post auth/token success
+2021-11-05 02:28:57 info: patch /users/id success
+2021-11-05 02:29:07 info: delete /users/id success
+2021-11-05 02:31:19 error: Unknown column 'User.parentId' in 'on clause'
+2021-11-05 02:32:33 info: get /users/id/comments success

@@ -9,7 +9,19 @@ try {
     fs.readdirSync('uploads');
 } catch (error) {
     console.error('uploads폴더가 없어 생성합니다.');
+    logger.error('uploads폴더가 없어 생성합니다.');
     fs.mkdirSync('uploads');
+}
+
+const fileFilter = (req, file, callback) => {
+    const typeArray = file.mimetype.split('/');
+    const fileType = typeArray[1]; // 이미지&동영상 확장자 추출
+    //이미지&동영상 확장자 구분 검사
+    if (fileType == 'jpg' || fileType == 'jpeg' || fileType == 'png' || fileType == 'mp4') {
+        callback(null, true)
+    } else {
+        return callback({ message: "*.jpg, *.jpeg, *.png, *.mp4파일만 업로드가 가능합니다." }, false)
+    }
 }
 
 const upload = multer({
@@ -19,12 +31,15 @@ const upload = multer({
         },
         filename(req, file, cb) {//파일명 설정
             const ext = path.extname(file.originalname);
-            cb(null, path.basename(file.originalname, ext) + Date.now() + ext);
+            cb(null, path.basename(file.originalname, ext) + Date.now() + ext);//겹칠 수도 있으니 시간을 정수로 달아줌
         },
     }),
     limits: { fileSize: 5 * 1024 * 1024 },
+    fileFilter: fileFilter
 });
 
+
+//.post('/post/img')
 const show = async (req, res, next) => {
     console.log(req.file);
     res.json({ url: `/img/${req.file.filename}` });
@@ -32,11 +47,12 @@ const show = async (req, res, next) => {
 
 const upload2 = multer();
 
+//.post('/post')
 const post = async (req, res, next) => {
     const post = await Comment.create({
         comment: req.body.comment,
         img: req.body.img,
-        parentId : req.body.parentId,
+        parentId: req.body.parentId,
     }).catch((err) => {
         logger.error(err);
         console.error(err);

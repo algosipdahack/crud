@@ -37,6 +37,7 @@ const verify = async (req, res, next) => {
     logger.error('cannot find login id');
     return response(res, 400, 'cannot find login id');
   }
+
   const commentId = req.query.commentId;
   if (!commentId) {
     logger.error('cannot find comment id');
@@ -51,6 +52,7 @@ const verify = async (req, res, next) => {
   logger.info('get auth/token success');
   return response(res, 200);
 }
+
 //patch('auth/levelup')
 const levelup = async (req, res, next) => {
   //관리자가 아니라면
@@ -60,10 +62,11 @@ const levelup = async (req, res, next) => {
   }
 
   const loginId = req.body.loginId;
+
   const user = await User.update({
-    isAdmin: true
+    isAdmin: true,
   }, {
-    where: { loginId: loginId }
+    where: { loginId: loginId },
   }).catch((err) => {
     logger.error(err);
     console.error(err);
@@ -77,6 +80,7 @@ const levelup = async (req, res, next) => {
   logger.info('post auth/levelup success');
   return response(res, 200, user);
 }
+
 module.exports = {
   create,
   verify,
