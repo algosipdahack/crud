@@ -11,23 +11,31 @@ services:
       - MYSQL_PASSWORD=$MYSQL_ROOT_PASSWORD
       - MYSQL_USER=$MYSQL_USER
     ports:
-      - 3306:3306
+      - $MYSQL_LOCAL_PORT:$MYSQL_DOCKER_PORT
     volumes:
       - ./db/conf.d:/etc/mysql/conf.d
       - ./db/data:/var/lib/mysql
       - ./db/initdb.d:/docker-entrypoint-initdb.d
   app:
-    links:
-      - mysqldb
     depends_on:
       - mysqldb
     build: ./node/
     restart: unless-stopped
     env_file: ./node/.env
+    volumes:
+      - ./:/app
+      - /app/node/node_modules
+    working_dir: /app/node
+    command:
+      - bash
+      - -c
+      - |
+        /wait-for-it.sh db:3306 -t 10
+        npm start
     ports:
-      - 3000:3000
+      - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
     environment:
-      - DB_HOST=$DB_HOST
+      - DB_HOST=$MYSQL_HOST
       - DB_USER=$MYSQL_USER
       - DB_PASSWORD=$MYSQL_ROOT_PASSWORD
       - DB_NAME=$MYSQL_DATABASE
