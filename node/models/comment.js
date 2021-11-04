@@ -12,6 +12,10 @@ module.exports = class Comment extends Sequelize.Model {//commenter가 없음. �
                 type: Sequelize.STRING(100),//varchar(100)
                 allowNull: false,
             },
+            img: {
+                type: Sequelize.STRING(200),
+                allowNull: true,
+            }
         }, {
             sequelize,
             timestamps: true,
