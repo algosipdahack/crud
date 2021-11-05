@@ -25,6 +25,7 @@ services:
     volumes:
       - ./:/app
       - /app/node/node_modules
+      - ./node/uploads/:/app/node/uploads
     working_dir: /app/node
     command:
       - bash

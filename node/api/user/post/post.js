@@ -30,7 +30,7 @@ const upload = multer({
             cb(null, 'uploads/');
         },
         filename(req, file, cb) {//파일명 설정
-            const ext = path.extname(file.originalname);
+            const ext = path.extname(file.originalname);//파일 확장자 추출. originalname -> 사용자가 업로드한 파일 명
             cb(null, path.basename(file.originalname, ext) + Date.now() + ext);//겹칠 수도 있으니 시간을 정수로 달아줌
         },
     }),
@@ -41,7 +41,7 @@ const upload = multer({
 
 //.post('/post/img')
 const show = async (req, res, next) => {
-    console.log(req.file);
+    console.log(req.files);
     res.json({ url: `/img/${req.file.filename}` });
 }
 
@@ -66,9 +66,15 @@ const post = async (req, res, next) => {
     return response(res, 201, post);
 }
 
+const download = (req, res, next) => {
+    const filename = __dirname + '/uploads/' + req.params.filename;
+    res.download(filename);
+}
+
 module.exports = {
     upload,
     upload2,
     show,
-    post
+    post,
+    download
 }
